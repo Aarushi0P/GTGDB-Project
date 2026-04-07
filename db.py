@@ -1,5 +1,6 @@
+import hashlib
 import sqlite3
-from werkzeug.security import generate_password_hash, check_password_hash
+
 
 def GetDB():
 
@@ -27,7 +28,8 @@ def CheckLogin(username, password):
     # Do they exist?
     if user is not None:
         # OK they exist, is their password correct
-        if check_password_hash(user['password'], password):
+        password_hash = hashlib.sha1(password.encode('utf-8')).hexdigest()
+        if user['password'] == password_hash:
             # They got it right, return their details 
             return user
         
@@ -42,8 +44,8 @@ def RegisterUser(username, password):
 
     # Attempt to add them to the database
     db = GetDB()
-    hash = generate_password_hash(password)
-    db.execute("INSERT INTO Users(username, password) VALUES(?, ?)", (username, hash,))
+    password_hash = hashlib.sha1(password.encode('utf-8')).hexdigest()
+    db.execute("INSERT INTO Users(username, password) VALUES(?, ?)", (username, password_hash,))
     db.commit()
     db.close()
 
