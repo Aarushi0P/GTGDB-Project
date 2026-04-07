@@ -19,10 +19,8 @@ def Login():
         password = request.form['password']
 
         # Did they provide good details
-        user = db.CheckLogin(username, password)
-        if user:
-            # Yes! Save their username and id then
-            session['id'] = user['id']
+        if db.CheckLogin(username, password):
+            # Yes! Save their username then
             session['username'] = username
 
             # Send them back to the homepage
@@ -34,5 +32,20 @@ def Login():
 def Logout():
     session.clear()
     return redirect("/")
+
+@app.route("/register", methods=["GET", "POST"])
+def Register():
+
+    # If they click the submit button, let's register
+    if request.method == "POST":
+        username = request.form['username']
+        password = request.form['password']
+
+        # Try and add them to the DB
+        if db.RegisterUser(username, password):
+            # Success! Let's go to the homepage
+            return redirect("/")
+        
+    return render_template("register.html")
 
 app.run(debug=True, port=5000)
