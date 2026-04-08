@@ -31,7 +31,7 @@ def Login():
         if username in failed_attempts:
             attempts = failed_attempts[username]
             if attempts['count'] >= 5 and current_time - attempts['last_attempt'] < 300:  # 5 failed attempts, 5 min lockout
-                return render_template("login.html")  # Silently deny, or could add error message
+                return render_template("login.html", error="Too many incorrect attempts! Come back in 5 minutes 😿")
 
         # Did they provide good details
         user = db.CheckLogin(username, password)
