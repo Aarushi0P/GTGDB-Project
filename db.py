@@ -39,11 +39,21 @@ def CheckLogin(username, password):
 def RegisterUser(username, password):
 
     # Check if they gave us a username and password
-    if username is None or password is None:
+    if username is None or password is None or username.strip() == "" or password.strip() == "":
+        return False
+
+    # Check password strength: minimum 8 characters
+    if len(password) < 8:
+        return False
+
+    # Check if username already exists
+    db = GetDB()
+    existing_user = db.execute("SELECT id FROM Users WHERE username=?", (username,)).fetchone()
+    if existing_user:
+        db.close()
         return False
 
     # Attempt to add them to the database
-    db = GetDB()
     password_hash = hashlib.sha1(password.encode('utf-8')).hexdigest()
     db.execute("INSERT INTO Users(username, password) VALUES(?, ?)", (username, password_hash,))
     db.commit()
@@ -58,13 +68,32 @@ def RegisterUser(username, password):
 def AddGuess(user_id, date, game, score):
    
     # Check if any boxes were empty
-    if date is None or game is None:
+    if date is None or game is None or score is None:
+        return False
+    
+    # Check for empty strings
+    if date.strip() == "" or game.strip() == "" or str(score).strip() == "":
+        return False
+    
+    # Validate date format (YYYY-MM-DD)
+    try:
+        from datetime import datetime
+        datetime.strptime(date, '%Y-%m-%d')
+    except ValueError:
+        return False
+    
+    # Validate score: should be positive integer
+    try:
+        score_int = int(score)
+        if score_int <= 0:
+            return False
+    except ValueError:
         return False
    
     # Get the DB and add the guess
     db = GetDB()
     db.execute("INSERT INTO Guesses(user_id, date, game, score) VALUES (?, ?, ?, ?)",
-               (user_id, date, game, score,))
+               (user_id, date, game, score_int,))
     db.commit()
     db.close()
 

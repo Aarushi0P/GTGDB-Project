@@ -18,8 +18,8 @@ def Login():
     # They sent us data, get the username and password
     # then check if their details are correct.
     if request.method == "POST":
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form['username'].strip()
+        password = request.form['password'].strip()
 
         # Did they provide good details
         user = db.CheckLogin(username, password)
@@ -46,8 +46,8 @@ def Register():
 
     # If they click the submit button, let's register
     if request.method == "POST":
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form['username'].strip()
+        password = request.form['password'].strip()
 
         # Try and add them to the DB
         if db.RegisterUser(username, password):
@@ -69,13 +69,14 @@ def Add():
     # Did they click submit?
     if request.method == "POST":
         user_id = session['id']
-        date = request.form['date']
-        game = request.form['game']
-        score = request.form['score']
+        date = request.form['date'].strip()
+        game = request.form['game'].strip()
+        score = request.form['score'].strip()
 
         # Send the data to add our new guess to the db
-        db.AddGuess(user_id, date, game, score)
-        return redirect("/")
+        if db.AddGuess(user_id, date, game, score):
+            return redirect("/")
+        # If validation failed, fall through to render template again
 
     return render_template("add.html")
 
