@@ -53,6 +53,8 @@ def Login():
                 failed_attempts[username]['count'] += 1
                 failed_attempts[username]['last_attempt'] = current_time
 
+            return render_template("login.html", error="Uh oh, your username or password seems to be wrong 😿")
+
     return render_template("login.html")
 
 @app.route("/logout")
