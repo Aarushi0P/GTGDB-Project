@@ -1,8 +1,12 @@
 from flask import Flask, render_template, request, session, redirect
 import db
+import time
 
 app = Flask(__name__)
 app.secret_key = "gtg"
+
+# Rate limiting for login attempts
+failed_attempts = {}  # username: {'count': int, 'last_attempt': timestamp}
 
 @app.route("/")
 def Home():
@@ -21,6 +25,14 @@ def Login():
         username = request.form['username'].strip()
         password = request.form['password'].strip()
 
+        current_time = time.time()
+
+        # Check rate limiting
+        if username in failed_attempts:
+            attempts = failed_attempts[username]
+            if attempts['count'] >= 5 and current_time - attempts['last_attempt'] < 300:  # 5 failed attempts, 5 min lockout
+                return render_template("login.html")  # Silently deny, or could add error message
+
         # Did they provide good details
         user = db.CheckLogin(username, password)
         if user:
@@ -28,8 +40,18 @@ def Login():
             session['username'] = user['username']
             session['id'] = user['id']
 
+            # Reset failed attempts on successful login
+            failed_attempts[username] = {'count': 0, 'last_attempt': current_time}
+
             # Send them back to the homepage
             return redirect("/")
+        else:
+            # Failed login, increment attempts
+            if username not in failed_attempts:
+                failed_attempts[username] = {'count': 1, 'last_attempt': current_time}
+            else:
+                failed_attempts[username]['count'] += 1
+                failed_attempts[username]['last_attempt'] = current_time
 
     return render_template("login.html")
 
