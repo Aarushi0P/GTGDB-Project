@@ -22,14 +22,14 @@ main {
 .banner {
     padding: 60px;
     text-align: center;
-    background: #1abc9c;
+    background: linear-gradient(to right, #F7B2B7, #F7717D, #DE639A, #7F2982, #16001E);
     color: white;
     font-size: 3em;
 }
 
 nav {
     overflow: hidden;
-    background-color: #333;
+    background-color: #7F2982;
     text-align: center; 
 }
 
@@ -48,7 +48,7 @@ nav a:hover {
 }
 
 nav a.active {
-    background-color: #04AA6D;
+    background-color: #16001E;
     color: white;
 }
 
@@ -75,7 +75,7 @@ nav a.active {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: #1abc9c;
+    background-color: #DE639A;
     color: white;
 }
 
@@ -91,7 +91,7 @@ input[type=text], input[type="password"], input[type="date"], input[type="number
 
 input[type=submit] {
     width: 100%;
-    background-color: #4CAF50;
+    background-color: #F7717D;
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
@@ -102,11 +102,11 @@ input[type=submit] {
 }
 
 input[type=submit]:hover {
-    background-color: #45a049;
+    background-color: #DE639A;
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: #F7717D;
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
