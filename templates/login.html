@@ -5,13 +5,16 @@
 <div class="lockout-overlay">
     <div class="lockout-box">
         <div class="lockout-cat">🐱</div>
-        <h2>Too many incorrect attempts!</h2>
-        <p>Come back in <span id="countdown"></span></p>
+        <h2 class="lockout-title">Nope! Too many tries</h2>
+        <p class="lockout-text">Come back in</p>
+        <div id="countdown" class="lockout-timer">5:00</div>
+        <p class="lockout-subtext">This login is having a little cat nap.</p>
     </div>
 </div>
 
 <script>
     const lockedUntil = {{ locked_until|int }};
+
     function updateCountdown() {
         const now = Math.floor(Date.now() / 1000);
         const remaining = lockedUntil - now;
@@ -23,6 +26,7 @@
 
         const minutes = Math.floor(remaining / 60);
         const seconds = remaining % 60;
+
         document.getElementById("countdown").textContent =
             `${minutes}:${seconds.toString().padStart(2, "0")}`;
     }
@@ -30,7 +34,6 @@
     updateCountdown();
     setInterval(updateCountdown, 1000);
 </script>
-
 {% else %}
 <h2>Login</h2>
 {% if error %}
