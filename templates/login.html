@@ -14,7 +14,7 @@
     const lockedUntil = {{ locked_until|int }};
     function updateCountdown() {
         const now = Math.floor(Date.now() / 1000);
-        let remaining = lockedUntil - now;
+        const remaining = lockedUntil - now;
 
         if (remaining <= 0) {
             window.location.reload();

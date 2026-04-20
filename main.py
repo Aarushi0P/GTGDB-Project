@@ -18,20 +18,31 @@ def Login():
     if session.get("username") is not None:
         return redirect("/")
 
+    current_time = time.time()
+
+    # Check if this browser session is currently locked
+    locked_until = session.get("locked_until")
+    if locked_until and current_time < locked_until:
+        return render_template("login.html", locked_until=int(locked_until))
+
+    # Clear expired lock
+    if locked_until and current_time >= locked_until:
+        session.pop("locked_until", None)
+
     if request.method == "POST":
         username = request.form["username"].strip()
         password = request.form["password"].strip()
 
-        current_time = time.time()
-
         if username in failed_attempts:
             attempts = failed_attempts[username]
             if attempts["count"] >= 5 and current_time - attempts["last_attempt"] < 300:
-                locked_until = int(attempts["last_attempt"] + 300)
-                return render_template("login.html", locked_until=None)
+                lock_time = int(attempts["last_attempt"] + 300)
+                session["locked_until"] = lock_time
+                return render_template("login.html", locked_until=lock_time)
 
         user = db.CheckLogin(username, password)
         if user:
+            session.pop("locked_until", None)
             session["username"] = user["username"]
             session["id"] = user["id"]
             failed_attempts[username] = {"count": 0, "last_attempt": current_time}
@@ -43,9 +54,15 @@ def Login():
             failed_attempts[username]["count"] += 1
             failed_attempts[username]["last_attempt"] = current_time
 
-        return render_template("login.html", error="Incorrect username or password.", locked_until = None)
+        # If they just hit the lockout threshold, activate overlay immediately
+        if failed_attempts[username]["count"] >= 5:
+            lock_time = int(current_time + 300)
+            session["locked_until"] = lock_time
+            return render_template("login.html", locked_until=lock_time)
 
-    return render_template("login.html")
+        return render_template("login.html", error="Incorrect username or password.", locked_until=None)
+
+    return render_template("login.html", locked_until=None)
 
 @app.route("/logout")
 def Logout():

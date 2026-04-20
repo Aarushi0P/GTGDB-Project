@@ -126,15 +126,26 @@ button {
     padding: 20px;
 }
 
+.lockout-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(35, 0, 20, 0.94);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
 .lockout-box {
-    background: #ffedf6;
-    color: #7a003c;
-    border-radius: 20px;
+    background: #fff0f7;
+    color: #8a0047;
+    border-radius: 24px;
     padding: 40px 30px;
     text-align: center;
-    max-width: 500px;
     width: 100%;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    max-width: 520px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
 }
 
 .lockout-cat {
