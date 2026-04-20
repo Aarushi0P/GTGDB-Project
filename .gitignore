@@ -1,0 +1,4 @@
+.database/gtg.db
+*.db
+__pycache__/
+*.pyc

@@ -2,6 +2,9 @@
 
 {% block content %}
 <h2>Add a new guess</h2>
+{% if error %}
+<p style="color: #FF1493; font-weight: bold;">{{ error }}</p>
+{% endif %}
 <form action="/add" method="post">
     <label>Date: </label>
     <input type="date" name="date" id="date">
