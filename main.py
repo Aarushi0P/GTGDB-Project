@@ -27,7 +27,8 @@ def Login():
         if username in failed_attempts:
             attempts = failed_attempts[username]
             if attempts["count"] >= 5 and current_time - attempts["last_attempt"] < 300:
-                return render_template("login.html", error="Too many incorrect attempts! Come back in 5 minutes.")
+                locked_until = int(attempts["last_attempt"] + 300)
+                return render_template("login.html", locked_until=None)
 
         user = db.CheckLogin(username, password)
         if user:
@@ -42,7 +43,7 @@ def Login():
             failed_attempts[username]["count"] += 1
             failed_attempts[username]["last_attempt"] = current_time
 
-        return render_template("login.html", error="Incorrect username or password.")
+        return render_template("login.html", error="Incorrect username or password.", locked_until = None)
 
     return render_template("login.html")
 
