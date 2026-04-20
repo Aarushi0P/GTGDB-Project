@@ -115,3 +115,39 @@ button {
     cursor: pointer;
     font-size: 1.05em;
 }
+.lockout-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 0, 20, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.lockout-box {
+    background: #ffedf6;
+    color: #7a003c;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.lockout-cat {
+    font-size: 120px;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.lockout-box h2 {
+    margin-bottom: 12px;
+}
+
+.lockout-box p {
+    font-size: 1.3em;
+    font-weight: bold;
+}
