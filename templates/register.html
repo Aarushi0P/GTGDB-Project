@@ -8,8 +8,21 @@
 <form action="/register" method="post">
     <label>Username: </label>
     <input type="text" name="username" id="username">
+
     <label>Password: </label>
     <input type="password" name="password" id="password">
+
+    <label>Favourite Sanrio Character: </label>
+    <select name="sanrio_character" id="sanrio_character">
+        <option value="Hello Kitty">Hello Kitty</option>
+        <option value="Aggretsuko">Aggretsuko</option>
+        <option value="My Melody">My Melody</option>
+        <option value="Kuromi">Kuromi</option>
+        <option value="Cinnamoroll">Cinnamoroll</option>
+        <option value="Pompompurin">Pompompurin</option>
+        <option value="Keroppi">Keroppi</option>
+    </select>
+
     <input type="submit" value="Register">
 </form>
 {% endblock %}

@@ -3,35 +3,23 @@
 {% block content %}
 
 <div class="container">
+    <p>Welcome to GuessThe.Game Database (aka. GTGDB). Track your guesses and show off your favourite Sanrio character.</p>
 
-    <p>Welcome to GuessThe.Game Database (aka. GTGDB). This website is dedicated to the hard working Year 12 SE students of 2024-2025. The last 5 minutes of class are always a flurry of excitement and hard work. They open <a href="https://guessthe.game/">GuessThe.Game</a> and scream their suggestions at the host. Let's start tracking their progress.</p>
-
-
-    <!-- -------------------- -->
-    <!-- New code starts here -->
-    <!-- -------------------- -->
-    {% if session['username'] %}
+    {% if session.get('username') and current_user %}
         <br>
-        <p>Hello {{ session['username'] }}</p>
-
-        <!-- -------------------- -->
-        <!-- New code starts here -->
-        <!-- -------------------- -->
+        <p>Hello {{ session['username'] }}!</p>
+        <p>Your favourite Sanrio character is <strong>{{ current_user['sanrio_character'] }}</strong> 💖</p>
         <a href="/add"><button>Add guess</button></a>
-        <!-- -------------------- -->
-        <!-- New code ends here   -->
-        <!-- -------------------- -->
     {% endif %}
-
 </div>
 
 <br>
 
 <table class="guess_table">
-
     <thead>
         <th>Date</th>
         <th>User who guessed</th>
+        <th>Favourite Sanrio Character</th>
         <th>Game</th>
         <th>Score</th>
     </thead>
@@ -41,12 +29,12 @@
         <tr>
             <td>{{ guess['date'] }}</td>
             <td>{{ guess['username'] }}</td>
+            <td>{{ guess['sanrio_character'] }}</td>
             <td>{{ guess['game'] }}</td>
             <td>{{ guess['score'] }}</td>
         </tr>
         {% endfor %}
     </tbody>
-
 </table>
 
 {% endblock %}

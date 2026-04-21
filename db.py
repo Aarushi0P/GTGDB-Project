@@ -13,13 +13,20 @@ def GetDB():
 def GetAllGuesses():
     db = GetDB()
     guesses = db.execute("""
-        SELECT Guesses.date, Guesses.score, Guesses.game, Users.username
+        SELECT Guesses.date, Guesses.score, Guesses.game, Users.username, Users.sanrio_character
         FROM Guesses
         JOIN Users ON Guesses.user_id = Users.id
         ORDER BY date DESC
     """).fetchall()
     db.close()
     return guesses
+
+
+def GetUserById(user_id):
+    db = GetDB()
+    user = db.execute("SELECT * FROM Users WHERE id=?", (user_id,)).fetchone()
+    db.close()
+    return user
 
 
 def CheckLogin(username, password):
@@ -33,20 +40,34 @@ def CheckLogin(username, password):
     return None
 
 
-def RegisterUser(username, password):
-    if username is None or password is None:
+def RegisterUser(username, password, sanrio_character):
+    if username is None or password is None or sanrio_character is None:
         return False
 
     username = username.strip()
     password = password.strip()
+    sanrio_character = sanrio_character.strip()
 
-    if username == "" or password == "":
+    if username == "" or password == "" or sanrio_character == "":
         return False
 
     if not re.fullmatch(r"[A-Za-z0-9_.-]{3,20}", username):
         return False
 
     if len(password) < 8:
+        return False
+
+    allowed_characters = [
+        "Hello Kitty",
+        "Aggretsuko",
+        "My Melody",
+        "Kuromi",
+        "Cinnamoroll",
+        "Pompompurin",
+        "Keroppi"
+    ]
+
+    if sanrio_character not in allowed_characters:
         return False
 
     db = GetDB()
@@ -56,7 +77,10 @@ def RegisterUser(username, password):
         return False
 
     password_hash = generate_password_hash(password)
-    db.execute("INSERT INTO Users(username, password) VALUES(?, ?)", (username, password_hash))
+    db.execute(
+        "INSERT INTO Users(username, password, sanrio_character) VALUES(?, ?, ?)",
+        (username, password_hash, sanrio_character)
+    )
     db.commit()
     db.close()
     return True

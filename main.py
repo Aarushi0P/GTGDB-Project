@@ -11,7 +11,12 @@ failed_attempts = {}
 @app.route("/")
 def Home():
     guessData = db.GetAllGuesses()
-    return render_template("index.html", guesses=guessData)
+    current_user = None
+
+    if session.get("id") is not None:
+        current_user = db.GetUserById(session["id"])
+
+    return render_template("index.html", guesses=guessData, current_user=current_user)
 
 @app.route("/login", methods=["GET", "POST"])
 def Login():
@@ -20,12 +25,10 @@ def Login():
 
     current_time = time.time()
 
-    # Check if this browser session is currently locked
     locked_until = session.get("locked_until")
     if locked_until and current_time < locked_until:
         return render_template("login.html", locked_until=int(locked_until))
 
-    # Clear expired lock
     if locked_until and current_time >= locked_until:
         session.pop("locked_until", None)
 
@@ -54,7 +57,6 @@ def Login():
             failed_attempts[username]["count"] += 1
             failed_attempts[username]["last_attempt"] = current_time
 
-        # If they just hit the lockout threshold, activate overlay immediately
         if failed_attempts[username]["count"] >= 5:
             lock_time = int(current_time + 300)
             session["locked_until"] = lock_time
@@ -77,11 +79,12 @@ def Register():
     if request.method == "POST":
         username = request.form["username"].strip()
         password = request.form["password"].strip()
+        sanrio_character = request.form["sanrio_character"].strip()
 
-        if db.RegisterUser(username, password):
+        if db.RegisterUser(username, password, sanrio_character):
             return redirect("/")
 
-        return render_template("register.html", error="Registration failed. Check username, password, or duplicate account.")
+        return render_template("register.html", error="Registration failed. Check username, password, duplicate account, or character choice.")
 
     return render_template("register.html")
 
