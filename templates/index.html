@@ -3,13 +3,12 @@
 {% block content %}
 
 <div class="container">
-    <p>Welcome to GuessThe.Game Database (aka. GTGDB). Track your guesses and show off your favourite Sanrio character.</p>
+    <p>Welcome to Sanrio Character Vault. Save your favourite characters, ratings, and little notes all in one cute place.</p>
 
     {% if session.get('username') and current_user %}
         <br>
         <p>Hello {{ session['username'] }}!</p>
         <p>Your favourite Sanrio character is <strong>{{ current_user['sanrio_character'] }}</strong> 💖</p>
-        <a href="/add"><button>Add guess</button></a>
     {% endif %}
 </div>
 
@@ -18,20 +17,22 @@
 <table class="guess_table">
     <thead>
         <th>Date</th>
-        <th>User who guessed</th>
-        <th>Favourite Sanrio Character</th>
-        <th>Game</th>
-        <th>Score</th>
+        <th>User</th>
+        <th>Favourite Character</th>
+        <th>Character Entry</th>
+        <th>Rating</th>
+        <th>Note</th>
     </thead>
 
     <tbody>
-        {% for guess in guesses %}
+        {% for entry in entries %}
         <tr>
-            <td>{{ guess['date'] }}</td>
-            <td>{{ guess['username'] }}</td>
-            <td>{{ guess['sanrio_character'] }}</td>
-            <td>{{ guess['game'] }}</td>
-            <td>{{ guess['score'] }}</td>
+            <td>{{ entry['date'] }}</td>
+            <td>{{ entry['username'] }}</td>
+            <td>{{ entry['sanrio_character'] }}</td>
+            <td>{{ entry['character_name'] }}</td>
+            <td>{{ entry['rating'] }}/5</td>
+            <td>{{ entry['note'] }}</td>
         </tr>
         {% endfor %}
     </tbody>

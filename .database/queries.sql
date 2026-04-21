@@ -1,18 +1,19 @@
-DROP TABLE IF EXISTS Guesses;
+DROP TABLE IF EXISTS Entries;
 DROP TABLE IF EXISTS Users;
 
 CREATE TABLE Users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    sanrio_character TEXT NOT NULL DEFAULT 'Hello Kitty'
+    sanrio_character TEXT NOT NULL
 );
 
-CREATE TABLE Guesses (
+CREATE TABLE Entries (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     date TEXT NOT NULL,
-    score INTEGER NOT NULL,
-    game TEXT NOT NULL,
+    character_name TEXT NOT NULL,
+    rating INTEGER NOT NULL,
+    note TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );

@@ -10,13 +10,13 @@ failed_attempts = {}
 
 @app.route("/")
 def Home():
-    guessData = db.GetAllGuesses()
+    entries = db.GetAllEntries()
     current_user = None
 
     if session.get("id") is not None:
         current_user = db.GetUserById(session["id"])
 
-    return render_template("index.html", guesses=guessData, current_user=current_user)
+    return render_template("index.html", entries=entries, current_user=current_user)
 
 @app.route("/login", methods=["GET", "POST"])
 def Login():
@@ -24,8 +24,8 @@ def Login():
         return redirect("/")
 
     current_time = time.time()
-
     locked_until = session.get("locked_until")
+
     if locked_until and current_time < locked_until:
         return render_template("login.html", locked_until=int(locked_until))
 
@@ -96,13 +96,14 @@ def Add():
     if request.method == "POST":
         user_id = session["id"]
         date = request.form["date"].strip()
-        game = request.form["game"].strip()
-        score = request.form["score"].strip()
+        character_name = request.form["character_name"].strip()
+        rating = request.form["rating"].strip()
+        note = request.form["note"].strip()
 
-        if db.AddGuess(user_id, date, game, score):
+        if db.AddEntry(user_id, date, character_name, rating, note):
             return redirect("/")
 
-        return render_template("add.html", error="Please enter a valid date, game, and score.")
+        return render_template("add.html", error="Please enter valid Sanrio entry details.")
 
     return render_template("add.html")
 

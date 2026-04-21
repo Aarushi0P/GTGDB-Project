@@ -1,17 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Add a new guess</h2>
+<h2>Add a Sanrio Entry</h2>
 {% if error %}
 <p style="color: #FF1493; font-weight: bold;">{{ error }}</p>
 {% endif %}
 <form action="/add" method="post">
     <label>Date: </label>
     <input type="date" name="date" id="date">
-    <label>Game: </label>
-    <input type="text" name="game" id="game">
-    <label>Score: </label>
-    <input type="number" name="score" id="score">
-    <input type="submit" value="Add guess">
+
+    <label>Character: </label>
+    <select name="character_name" id="character_name">
+        <option value="Hello Kitty">Hello Kitty</option>
+        <option value="Aggretsuko">Aggretsuko</option>
+        <option value="My Melody">My Melody</option>
+        <option value="Kuromi">Kuromi</option>
+        <option value="Cinnamoroll">Cinnamoroll</option>
+        <option value="Pompompurin">Pompompurin</option>
+        <option value="Keroppi">Keroppi</option>
+    </select>
+
+    <label>Rating (1-5): </label>
+    <input type="number" name="rating" id="rating" min="1" max="5">
+
+    <label>Note: </label>
+    <input type="text" name="note" id="note">
+
+    <input type="submit" value="Add entry">
 </form>
 {% endblock %}

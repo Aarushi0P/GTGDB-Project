@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
 
-    <title>Sanrio GuessThe.Game DB</title>
+    <title>Sanrio Character Vault</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}" />
@@ -14,8 +14,8 @@
 </head>
 <body>
     <div class="banner">
-        <img src="{{ url_for('static', filename='icons/icon-192x192.png') }}" alt="GTGDB icon" width="90">
-        <h1>Sanrio GuessThe.Game Database</h1>
+        <img src="{{ url_for('static', filename='icons/icon-192x192.png') }}" alt="Sanrio icon" width="90">
+        <h1>Sanrio Character Vault</h1>
     </div>
 
     <nav>
@@ -25,6 +25,7 @@
             <a href="/register">Register</a>
         {% else %}
             <a href="/logout">Logout</a>
+            <a href="/add">Add Entry</a>
         {% endif %}
     </nav>
 

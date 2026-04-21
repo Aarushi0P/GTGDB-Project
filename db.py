@@ -10,16 +10,17 @@ def GetDB():
     return db
 
 
-def GetAllGuesses():
+def GetAllEntries():
     db = GetDB()
-    guesses = db.execute("""
-        SELECT Guesses.date, Guesses.score, Guesses.game, Users.username, Users.sanrio_character
-        FROM Guesses
-        JOIN Users ON Guesses.user_id = Users.id
+    entries = db.execute("""
+        SELECT Entries.date, Entries.character_name, Entries.rating, Entries.note,
+               Users.username, Users.sanrio_character
+        FROM Entries
+        JOIN Users ON Entries.user_id = Users.id
         ORDER BY date DESC
     """).fetchall()
     db.close()
-    return guesses
+    return entries
 
 
 def GetUserById(user_id):
@@ -86,18 +87,32 @@ def RegisterUser(username, password, sanrio_character):
     return True
 
 
-def AddGuess(user_id, date, game, score):
-    if user_id is None or date is None or game is None or score is None:
+def AddEntry(user_id, date, character_name, rating, note):
+    if user_id is None or date is None or character_name is None or rating is None or note is None:
         return False
 
     date = date.strip()
-    game = game.strip()
-    score = str(score).strip()
+    character_name = character_name.strip()
+    rating = str(rating).strip()
+    note = note.strip()
 
-    if date == "" or game == "" or score == "":
+    if date == "" or character_name == "" or rating == "" or note == "":
         return False
 
-    if len(game) > 100:
+    allowed_characters = [
+        "Hello Kitty",
+        "Aggretsuko",
+        "My Melody",
+        "Kuromi",
+        "Cinnamoroll",
+        "Pompompurin",
+        "Keroppi"
+    ]
+
+    if character_name not in allowed_characters:
+        return False
+
+    if len(note) > 150:
         return False
 
     try:
@@ -106,16 +121,16 @@ def AddGuess(user_id, date, game, score):
         return False
 
     try:
-        score_int = int(score)
-        if score_int < 0 or score_int > 100:
+        rating_int = int(rating)
+        if rating_int < 1 or rating_int > 5:
             return False
     except ValueError:
         return False
 
     db = GetDB()
     db.execute(
-        "INSERT INTO Guesses(user_id, date, game, score) VALUES (?, ?, ?, ?)",
-        (user_id, date, game, score_int)
+        "INSERT INTO Entries(user_id, date, character_name, rating, note) VALUES (?, ?, ?, ?, ?)",
+        (user_id, date, character_name, rating_int, note)
     )
     db.commit()
     db.close()
